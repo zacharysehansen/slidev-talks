@@ -1,0 +1,16 @@
+{
+  "name": "seminar-deck",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node deck.mjs dev",
+    "build": "node deck.mjs build",
+    "export": "node deck.mjs export",
+    "check": "node deck.mjs check"
+  },
+  "devDependencies": {
+    "@slidev/cli": "^52.19.1",
+    "playwright-chromium": "^1.62.1",
+    "vue": "^3.5.0"
+  }
+}

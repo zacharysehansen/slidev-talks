@@ -1,0 +1,24 @@
+node_modules/
+dist/
+settings.local.json
+__pycache__/
+.venv/
+
+# Talks are private. Only the theme, the tooling and the demo talk are public.
+talks/*
+!talks/_demo/
+
+# No images, video, PDFs or slide files anywhere, including the theme's brand art.
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.gif
+*.mov
+*.mp4
+*.pdf
+*.pptx
+
+# generated figure output and the source pptx
+**/public/figures/
+reference/

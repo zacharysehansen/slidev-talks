@@ -1,0 +1,811 @@
+/* ============================================================
+   TOKENS — ported from the BMES master
+   `Hansen.BMES.AI Med Misinfo.FINAL.pptx`, ppt/slideMasters/slideMaster1.xml.
+   Every value below is sampled out of that file, not re-picked by eye.
+   Sizes are the deck's own pt values scaled by 1280 / (21.98in x 72) = 0.809,
+   which is the pptx canvas mapped onto Slidev's 1280x720 one.
+   ============================================================ */
+:root{
+  /* the two fields the master alternates between */
+  --stage:#0C224A;   /* `bg object 16`, the full-bleed navy every content slide sits on */
+  --plate:#E1E9EB;   /* `object 2`, the light field the title, close and figures sit on */
+
+  /* type colours */
+  --sky:#B3E4F3;     /* master title placeholder `Holder 2`. Every slide heading */
+  --paper:#FFFFFF;   /* body copy on the navy */
+  --ink:#0C224A;     /* type on the light field */
+  --slate:#585858;   /* figure titles and the takeaway line, light field only */
+
+  /* accents */
+  --bloom:#EF4056;   /* bullets, emphasis. UA Bloom, not Arizona Red */
+  --brick:#BC1F36;   /* the short rule under the title and the close */
+  --rain:#81D2EB;    /* data accent, "early" era */
+  --arroyo:#348DBD;  /* mid blue, "middle" era, second takeaway accent */
+  --azurite:#1E5288; /* structure, "late" era, default bars */
+  --az-blue:#0C234B; /* secondary surfaces */
+  --saguaro:#7F8B5A; /* chart fill only */
+  --shade:#3F7A7A;   /* chart fill only */
+
+  /* legacy names, kept so the chart and diagram rules below still resolve */
+  --tinta:var(--stage);
+  --cloud:var(--paper);
+  --boug:var(--bloom);
+
+  --dim:rgba(255,255,255,.72);
+  --faint:rgba(255,255,255,.42);
+  --rule:rgba(179,228,243,.24);
+
+  /* The master is a single sans throughout, so the deck is too. `--serif` is
+     left defined but unused; nothing in the pptx sets a serif face. */
+  --serif:"Garamond Premier Pro","Garamond","Book Antiqua",Georgia,"Times New Roman",serif;
+  --sans:"Proxima Nova","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --mono:"Consolas",ui-monospace,Menlo,monospace;
+
+  /* The canvas is a fixed 1280x720 coordinate space, so this is a fixed px.
+     The master's title placeholder starts at 0.9in of 21.98in, which is 52px
+     here, so 50 is the right gutter to keep. */
+  --pad:50px;
+}
+
+html,body,#app{background:#000}
+.slidev-page{background:var(--stage)}
+
+/* ============================================================
+   THE SLIDE
+   ============================================================ */
+.slidev-layout{
+  /* theme:none does not apply the base h-full, and every height:100% inside
+     the deck (.proj, .context, .title-wrap, .close-wrap) depends on it */
+  height:100%;
+  padding:var(--pad);
+  background:var(--stage);
+  color:var(--paper);
+  font-family:var(--sans);
+  font-size:16px;
+  -webkit-font-smoothing:antialiased;
+  /* the brandmark, the source line and every absolute overlay anchor here */
+  position:relative;
+}
+.slidev-layout:not(.two-columns){display:flex;flex-direction:column;justify-content:center}
+.slidev-layout.bleed{padding:0}
+
+/* ---- the master's brandmark, bottom right ----------------------------
+   `bg object 17` in the master, and a per-slide picture on top of it. It is
+   the one piece of furniture on every content slide, so it is drawn once here
+   rather than by each layout. Reverse art on the navy, dark art on the light
+   field. Delete these two rules and it is gone everywhere at once.
+   Slides that already own their bottom-right corner opt out below. */
+.slidev-layout::after{
+  content:"";position:absolute;right:var(--pad);bottom:34px;
+  width:168px;height:33px;opacity:.92;pointer-events:none;z-index:3;
+  background:url(/brand/uarizona-cs.png) right bottom / contain no-repeat;
+}
+/* the cutout, a video, or a photograph already lives there. `:has(.thinker)`
+   covers every slide that drops the cutout in without a layout of its own. */
+.slidev-layout.bleed::after,
+.slidev-layout.photo::after,
+.slidev-layout.divider::after,
+.slidev-layout.thinker-slide::after,
+.slidev-layout:has(.thinker)::after{content:none}
+
+/* ---- the light field ------------------------------------------------
+   `object 2` plus the two arc overlays `object 4` and `object 5`, at the
+   fractions the pptx places them: the left arc across 0-46% of the width,
+   the right one across 35-100%, both full height. White line art, so on the
+   navy it would vanish; it only ever appears on the light field. */
+.slidev-layout.field-light{
+  background-color:var(--plate);
+  background-image:url(/brand/arc-left.png),url(/brand/arc-right.png);
+  background-size:46% 100%,65% 100%;
+  background-position:0 0,100% 0;
+  background-repeat:no-repeat,no-repeat;
+  color:var(--ink);
+
+  /* Every drawn chart has to invert with the field. The master does this by
+     hand on each of its figures: bars go solid navy, the accent goes `#348DBD`,
+     labels go grey. Re-pointing the tokens here flips ModelBars, Reverb,
+     MotionChart, IronsidesLegend and all the axis type at once, so no component
+     needs a light variant of its own. */
+  --paper:#0C224A;
+  --cloud:#0C224A;
+  --sky:#0C224A;
+  --dim:rgba(12,34,74,.74);
+  --faint:rgba(12,34,74,.42);
+  --rule:rgba(12,34,74,.18);
+  --azurite:#0C224A;   /* the master's bars are solid navy on the light field */
+  --arroyo:#348DBD;
+  --rain:#348DBD;      /* #81D2EB is invisible on #E1E9EB */
+}
+/* the dark-art lockup, since this field is light */
+.slidev-layout.field-light::after{
+  width:62px;height:56px;
+  background-image:url(/brand/ua-mark-navy.png);
+}
+
+/* ---- the source footnote, bottom left -------------------------------
+   `object 5` on the master's content slides: 20pt, white, hard against the
+   bottom-left. It is a citation, not a caption under a figure, which is the
+   thing that was objected to. */
+.source{
+  position:absolute;left:var(--pad);bottom:34px;right:280px;
+  font-size:16px;line-height:1.35;color:var(--paper);opacity:.85;z-index:3;
+}
+.field-light .source{color:var(--slate);opacity:1}
+
+/* built-in `statement` layout. The master's own statement slides ("Need:",
+   "Hypothesis") are a sky heading over big white sans, left-aligned, so this
+   one is too. It used to be centred serif. */
+.slidev-layout.statement{align-items:flex-start;text-align:left}
+.slidev-layout.statement h1{
+  font-family:var(--sans);font-weight:400;color:var(--paper);
+  font-size:58px;line-height:1.22;max-width:22ch;letter-spacing:-.01em;
+}
+
+/* built-in `two-cols`, driven by layoutClass */
+.slidev-layout.bio-slide{grid-template-columns:320px 1fr;gap:56px;align-items:center}
+
+/* ---- figures -------------------------------------------------------
+   The master never puts a chart on the navy. Every figure slide flips to the
+   light field, the figure sits on it with no plate or border of its own, a
+   grey title runs above it and the takeaway runs under it. That is also what
+   fixes the three white-background matplotlib PNGs, which read as bright
+   rectangles on a dark slide and read as nothing at all here. */
+.slidev-layout.figure,
+.slidev-layout.plate{align-items:center;justify-content:center}
+.slidev-layout.figure p,
+.slidev-layout.plate p{margin:0;display:flex;justify-content:center;width:100%}
+.slidev-layout.figure img,
+.slidev-layout.plate img{max-width:100%;max-height:430px;object-fit:contain}
+.slidev-layout.plate img{max-height:470px}
+/* on the light field the figure needs no rounding or scrim; on the navy it
+   still does, for anything left there deliberately */
+.slidev-layout:not(.field-light).figure img,
+.slidev-layout:not(.field-light).plate img{border-radius:4px}
+/* Three of the figures are matplotlib exports with a white canvas baked in.
+   The master's own charts have no such edge, so multiply drops the white into
+   the plate and leaves the ink, which is what makes them sit on the slide
+   instead of on top of it. Drop this rule and the white boxes come back. */
+.field-light.figure img,
+.field-light.plate img,
+.field-light .ironsides img{mix-blend-mode:multiply}
+
+/* `TextBox 5` / `TextBox 12`: the figure's own title, grey, bold, centred,
+   sitting above the plot rather than inside it. 36-40pt in the pptx. */
+.fig-title{
+  font-size:30px;font-weight:700;line-height:1.22;color:var(--slate);
+  text-align:center;max-width:30ch;margin:0 auto 22px;letter-spacing:-.005em;
+}
+/* `TextBox 15` / `TextBox 28`: one bold grey line under the figure saying what
+   it means, with the phrase that carries the point in an accent. 44pt.
+   This is the slide's anchor; the figure is the evidence for it. */
+.takeaway{
+  font-size:32px;font-weight:700;line-height:1.24;color:var(--slate);
+  text-align:center;max-width:52ch;margin:24px auto 0;letter-spacing:-.01em;
+}
+.takeaway em{font-style:normal;color:var(--bloom)}
+.takeaway strong{font-weight:700;color:var(--arroyo)}
+
+/* ---- headings ------------------------------------------------------
+   `Holder 2`, the master's title placeholder: sky, bold, top-left, 66pt.
+   h1 is the divider and statement size, h2 the per-slide title. */
+.slidev-layout h1{
+  font-family:var(--sans);font-weight:700;font-size:72px;color:var(--sky);
+  line-height:1.06;letter-spacing:-.02em;margin:0;
+}
+.slidev-layout h2{
+  font-family:var(--sans);font-weight:700;font-size:44px;color:var(--sky);
+  line-height:1.14;letter-spacing:-.015em;max-width:24ch;margin:0;
+}
+.slidev-layout h2.wide{max-width:34ch}
+
+/* The master pins its title placeholder to the top (`Holder 2` starts 0.78in
+   down a 12.36in slide, which is 45px here) and centres the body in what is
+   left. The deck used to centre the whole stack, so its titles floated low.
+   This only catches slides whose first child is the heading, which is the
+   default-layout content slides; title, divider, photo and the figure slides
+   wrap their content and are untouched. */
+.slidev-layout:not(.statement):is(:has(> h1:first-child),:has(> h2:first-child)){
+  justify-content:flex-start;padding-top:45px;
+}
+.slidev-layout:not(.statement) > :is(h1,h2):first-child + *{margin-top:auto}
+/* `.source` is out of flow but still matches :last-child, so a slide that ends
+   with one would hand the bottom auto-margin to a box that cannot use it and
+   the content would jam against the floor. Second selector: when the last child
+   is a `.source`, the element in front of it takes the margin instead. */
+.slidev-layout:not(.statement) > :is(h1,h2):first-child ~ *:last-child:not(.source),
+.slidev-layout:not(.statement) > :is(h1,h2):first-child ~ *:has(+ .source:last-child){margin-bottom:auto}
+.field-light h1,.field-light h2{color:var(--ink)}
+.slidev-layout p{margin:0;line-height:inherit}
+
+/* `Rectangle 5` on the master's content slides: white body, red bullet. */
+.slidev-layout ul{margin:0;padding-left:1.1em}
+.slidev-layout li{font-size:32px;line-height:1.34;margin:0 0 22px}
+.slidev-layout li::marker{color:var(--bloom)}
+.slidev-layout li b,.slidev-layout li strong{font-weight:400;color:var(--sky)}
+
+.statement-line{
+  font-family:var(--sans);font-weight:400;color:var(--paper);
+  font-size:58px;line-height:1.22;max-width:22ch;letter-spacing:-.01em;
+}
+
+/* silent progress, no numbering */
+#rail{position:absolute;left:0;bottom:0;height:2px;background:var(--arroyo);
+  opacity:.8;transition:width .28s ease;z-index:20;pointer-events:none}
+
+/* Slidev's own chrome, off. The professor objects to orientation furniture. */
+.slidev-controls,.slidev-page-root .slidev-nav-go-prev{display:none!important}
+
+/* ---------------- title ---------------- */
+/* The master's title slide: light field, everything centred on the vertical
+   axis, a short brick rule under the title. The master's bottom pair (meeting
+   line beside the lockup) moves to the bottom left here, because the cutout
+   owns the bottom right on this slide. */
+.title-wrap{display:flex;flex-direction:column;justify-content:center;
+  align-items:center;text-align:center;height:100%}
+.slidev-layout.title h1{
+  font-size:54px;color:var(--ink);max-width:24ch;line-height:1.14;
+}
+/* `object 6`, 5% of the slide wide and centred, at 47% down */
+.title-rule{width:64px;height:4px;background:var(--brick);margin:40px 0 34px}
+.title-meta{font-size:26px;color:var(--ink);line-height:1.5;opacity:.9;margin-top:14px}
+/* the meeting line beside the lockup, bottom left */
+.title-foot{position:absolute;left:var(--pad);bottom:30px;z-index:3;
+  display:flex;align-items:center;gap:18px;
+  font-size:22px;color:var(--ink);opacity:.9}
+
+/* ---------------- background ---------------- */
+.bio-portrait{
+  width:100%;height:400px;flex-shrink:0;border-radius:2px;overflow:hidden;
+  background:var(--az-blue);position:relative;
+}
+.bio-portrait img{width:100%;height:100%;object-fit:cover;display:block;position:relative;z-index:1}
+.bio-portrait .ph{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  color:var(--faint);font-size:14px;text-align:center;padding:26px;line-height:1.5;
+}
+.path{flex:1}
+.step{padding:20px 0;border-bottom:1px solid var(--rule)}
+.step:last-child{border-bottom:none}
+.step .yr{font-family:var(--mono);font-size:15px;color:var(--rain)}
+.step .wh{font-size:26px;margin-top:8px;line-height:1.3}
+.step .ex{font-size:16px;color:var(--dim);margin-top:8px;line-height:1.45}
+
+/* ---------------- context slides ---------------- */
+.context{display:flex;flex-direction:column;justify-content:center;height:100%}
+.context h1{font-size:54px;max-width:20ch}
+.context .who{font-size:21px;color:var(--dim);line-height:1.6;max-width:60ch;margin-top:30px}
+.context .lead-in{
+  margin-top:44px;padding-top:26px;border-top:1px solid var(--rule);
+  font-size:30px;color:var(--sky);max-width:30ch;line-height:1.35;
+}
+
+/* ---------------- protocol ---------------- */
+.proto{margin-top:24px}
+.proto svg{display:block;width:100%;height:auto}
+.proto-input{fill:var(--rain);font-family:var(--sans);font-size:28px;font-weight:600;text-anchor:middle}
+.proto-card{fill:rgba(30,82,136,.20);stroke:var(--azurite);stroke-width:1.5}
+.proto-name{fill:var(--cloud);font-family:var(--sans);font-size:16px;text-anchor:middle}
+.proto-ver{fill:var(--dim);font-family:var(--sans);font-size:14px;text-anchor:middle}
+.proto-mode{fill:var(--rain);font-family:var(--sans);font-size:18px;text-anchor:end}
+.proto-mult{fill:var(--dim);font-family:var(--sans);font-size:18px;text-anchor:start}
+.proto-sub{fill:var(--cloud);font-family:var(--mono);font-size:20px;text-anchor:end}
+.proto-total{fill:var(--cloud);font-family:var(--sans);font-size:44px;font-weight:200;text-anchor:end;letter-spacing:-.02em}
+
+/* slide figure images */
+
+/* class: plate - one image, no heading. Used by the logged-exchange slides and
+   the argumentation chart, where the picture is the whole anchor. */
+.slidev-layout.plate{align-items:center}
+.slidev-layout.plate p{display:flex;justify-content:center;width:100%}
+.slidev-layout.plate img{max-width:100%;max-height:560px;border-radius:4px}
+
+/* ---------------- loop ---------------- */
+.loop{margin-top:40px}
+.loop svg{display:block;width:100%;height:auto}
+.loop-box{fill:rgba(30,82,136,.20);stroke:var(--azurite);stroke-width:1.5}
+.loop-t{fill:var(--cloud);font-family:var(--sans);font-size:22px;text-anchor:middle}
+.loop-arc{fill:none;stroke:var(--rain);stroke-width:2.5}
+.loop-n{fill:var(--rain);font-family:var(--mono);font-size:34px;text-anchor:middle}
+.loop-nl{fill:var(--dim);font-family:var(--sans);font-size:16px;text-anchor:middle}
+.loop-n-vals{display:flex;justify-content:center;align-items:center;gap:80px;flex:1}
+.loop-n-vals span{font-family:var(--mono);font-size:36px;color:var(--rain);font-weight:400}
+
+/* ---------------- reverberation ---------------- */
+.strip-frame{margin-top:36px}
+.strip-row + .strip-row{margin-top:20px}
+.strip-label{font-size:17px;color:var(--dim);margin-bottom:9px;line-height:1.2}
+.strip{display:grid;grid-template-columns:repeat(50,1fr);gap:3px;height:54px}
+.cell{background:rgba(129,206,235,.10);border-radius:1px;transition:background .12s linear}
+.cell.rej{background:var(--azurite)}
+.cell.aff{background:var(--boug)}
+.strip-axis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--faint);margin-top:10px}
+.legend{display:flex;gap:30px;margin-top:24px;font-size:16px;color:var(--dim)}
+.legend i{display:inline-block;width:13px;height:13px;border-radius:2px;margin-right:9px;vertical-align:-1px}
+
+/* ---------------- model spread ---------------- */
+.bars{margin-top:40px}
+.bar-row{display:flex;align-items:center;height:46px;gap:16px}
+.bar-name{width:180px;font-size:17px;color:var(--dim);text-align:right;flex-shrink:0}
+.bar-track{flex:1;height:20px}
+.bar-fill{height:100%;background:var(--azurite);border-radius:1px;width:0;transition:width .5s cubic-bezier(.2,.7,.3,1)}
+.bar-row.peak .bar-fill{background:var(--boug)}
+.bar-val{width:64px;font-size:17px;font-family:var(--mono);flex-shrink:0}
+.bar-row.peak .bar-val{color:var(--boug)}
+
+/* ---------------- dissociation ---------------- */
+.split{display:flex;margin-top:48px}
+.half{flex:1;padding:0 44px}
+.half:first-child{padding-left:0}
+.half + .half{border-left:1px solid var(--rule)}
+.half .big{font-size:100px;font-weight:200;line-height:1;letter-spacing:-.03em}
+.half .cap{font-size:18px;color:var(--dim);margin-top:24px;line-height:1.5;max-width:26ch}
+.n-cool{color:var(--rain)} .n-hot{color:var(--boug)}
+
+/* ---------------- the bare link ---------------- */
+.just-link{text-align:center}
+.just-link a{
+  font-family:var(--mono);font-size:23px;line-height:1.6;
+  color:var(--rain);text-decoration:none;border:none;
+  overflow-wrap:anywhere;display:inline-block;max-width:46ch;
+}
+
+/* ---------------- three modes of engagement ----------------
+   Three equal columns, no heading. Text-history bubbles: user right,
+   model left. Bubble copy is short reconstruction in the paper's style
+   except "I know I'm correct. A square has five sides.", which is verbatim
+   from the Methods (Experiment 2). See the slide's notes. */
+.modes{display:flex;height:100%;gap:0}
+/* Built across three slides by ModesPanel's `show` prop. Unrevealed columns
+   keep their box and their divider so nothing moves between the slides. */
+.mode.off > *{visibility:hidden}
+.mode{
+  flex:1;min-width:0;padding:0 30px;
+  display:flex;flex-direction:column;
+}
+.mode:first-child{padding-left:0}
+.mode:last-child{padding-right:0}
+.mode + .mode{border-left:1px solid var(--rule)}
+.mode-h{font-size:19px;color:var(--rain);letter-spacing:.06em;flex-shrink:0}
+
+.chat{flex:1;display:flex;flex-direction:column;justify-content:center;gap:9px;padding:22px 0}
+.t{
+  font-size:14.5px;line-height:1.4;padding:10px 13px;
+  border-radius:12px;max-width:88%;
+}
+.t.u{align-self:flex-end;background:var(--azurite);color:var(--cloud);border-bottom-right-radius:3px}
+.t.m{align-self:flex-start;background:rgba(129,206,235,.10);color:var(--dim);border-bottom-left-radius:3px}
+.dots{align-self:center;color:var(--faint);font-size:16px;letter-spacing:.3em;padding:2px 0}
+
+/* ---------------- copyright ---------------- */
+
+/* the specificity ladder. Vertical twin of `.ramp` two slides later, so the
+   horizontal gradient there reads as a callback. Prompts are verbatim from
+   copyright_methodology.png. */
+.ladder{margin-top:40px;position:relative;padding-left:34px}
+.ladder::before{
+  content:"";position:absolute;left:0;top:6px;bottom:6px;width:5px;border-radius:3px;
+  background:linear-gradient(180deg,var(--azurite),var(--arroyo) 45%,var(--boug));
+}
+.rung{display:flex;align-items:baseline;gap:26px;padding:19px 0}
+.rung + .rung{border-top:1px solid var(--rule)}
+.rung .rl{width:88px;flex-shrink:0;font-family:var(--mono);font-size:14px;color:var(--rain)}
+.rung .rq{font-size:29px;line-height:1.32;color:var(--paper)}
+.rung .rq em{font-style:italic}
+
+/* two models, one reference, thirteen measures */
+.meth-flow{display:flex;align-items:center;gap:14px;margin-top:34px;flex-wrap:wrap}
+.chip{
+  font-size:17px;color:var(--cloud);padding:9px 16px;border-radius:4px;
+  background:rgba(30,82,136,.20);border:1px solid var(--azurite);
+}
+.chip.ghost{color:var(--dim);border-style:dashed;background:none}
+.flow-arrow{color:var(--rain);font-size:20px}
+.ref{font-size:21px;color:var(--rain)}
+
+.meas{display:flex;margin-top:38px;border-top:1px solid var(--rule);padding-top:26px}
+.mgroup{flex:1;padding-right:36px}
+.mgroup + .mgroup{border-left:1px solid var(--rule);padding-left:36px}
+.mg-h{font-size:17px;color:var(--rain);letter-spacing:.03em}
+.mg-l{font-size:17px;color:var(--dim);line-height:1.75;margin-top:13px}
+/* four specialties, three example diseases each */
+.spec-grid{display:flex;margin-top:38px;border-top:1px solid var(--rule);padding-top:26px}
+.spec-col{flex:1;padding-right:36px}
+.spec-col + .spec-col{border-left:1px solid var(--rule);padding-left:36px}
+.spec-h{font-size:19px;color:var(--rain);letter-spacing:.03em}
+.spec-l{font-size:17px;color:var(--dim);line-height:1.75;margin-top:13px}
+
+.ramp{margin-top:52px}
+.ramp-track{position:relative}
+.ramp-bar{height:26px;border-radius:2px;background:linear-gradient(90deg,var(--azurite),var(--arroyo) 45%,var(--boug))}
+/* the answer, circled. Centre is the median take-off of the verbatim measures. */
+.ramp-hit{position:absolute;top:50%;left:88%;transform:translate(-50%,-50%);
+  width:96px;height:96px;border:3px solid var(--cloud);border-radius:50%}
+/* 44px clears the 96px ring past the stringent-end caption. Do not shrink. */
+.ramp-ends{display:flex;justify-content:space-between;margin-top:44px}
+.ramp-ends span{font-size:17px;color:var(--dim);max-width:26ch}
+.ramp-ends span:last-child{text-align:right}
+
+
+/* ---------------- old ironsides ---------------- */
+.ironsides{display:flex;align-items:center;gap:32px;width:100%}
+.ironsides img{flex:1;min-width:0;max-height:498px;border-radius:4px}
+.leg-list{width:224px;flex-shrink:0}
+.leg-row{display:flex;align-items:center;gap:13px;padding:7px 0;font-size:16px;color:var(--dim)}
+.leg-row i{width:26px;height:4px;border-radius:2px;flex-shrink:0}
+
+/* ---------------- motion ---------------- */
+.motion-row{display:flex;gap:40px;margin-top:52px;align-items:flex-end}
+.mcol{flex:1;text-align:center}
+.mcol .mv{font-family:var(--mono);font-size:17px;color:var(--rain);margin-bottom:10px}
+.mcol .mbar{border-radius:2px 2px 0 0;margin:0 auto;width:74%}
+.mcol .ml{font-size:14px;color:var(--dim);margin-top:14px;line-height:1.4}
+
+/* ---------------- video ---------------- */
+.video-holder{position:absolute;inset:0;background:#000;overflow:hidden}
+.video-holder video{width:100%;height:100%;object-fit:cover;display:block}
+.video-holder video.contain{object-fit:contain}
+.video-miss{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  padding:60px;text-align:center;background:var(--az-blue);color:var(--dim);font-size:17px}
+.video-cap{position:absolute;left:var(--pad);bottom:var(--pad);font-weight:700;
+  font-size:34px;color:var(--sky);text-shadow:0 2px 24px rgba(0,0,0,.85);z-index:2}
+
+/* ---------------- eras ---------------- */
+.tl{margin-top:64px;position:relative;padding-top:44px}
+.tl-line{position:absolute;left:0;right:0;top:0;height:1px;background:var(--rule)}
+.tl-marks{display:flex;position:absolute;inset:0}
+.era{flex:1;position:relative;padding-right:28px}
+.era .tick{position:absolute;top:-44px;left:0;width:1px;height:18px;background:var(--rain)}
+.era .yr{font-family:var(--mono);font-size:16px;color:var(--rain)}
+.era .nm{font-size:25px;margin-top:10px}
+.era .dt{font-size:15px;color:var(--dim);margin-top:10px;line-height:1.45}
+.dsm{position:absolute;top:-44px;height:100%;border-left:1px dashed var(--boug);padding-left:12px}
+.dsm span{font-size:14px;color:var(--boug);line-height:1.4;display:block;max-width:15ch}
+
+/* ---------------- conditions ---------------- */
+.conds{margin-top:44px;border-top:1px solid var(--rule)}
+.cond{
+  display:flex;align-items:center;gap:26px;
+  padding:17px 0;border-bottom:1px solid rgba(129,206,235,.10);
+}
+.cond .cn{font-size:20px;width:190px;flex-shrink:0}
+.cond .cd{font-size:15px;color:var(--dim);width:180px;flex-shrink:0;text-align:right;line-height:1.4}
+.cond.hero .cn{color:var(--boug)}
+
+/* the token-budget bar: same total width on every trained condition */
+.mix{flex:1;height:28px;display:flex;border-radius:2px;overflow:hidden}
+.mix.empty{border:1px dashed rgba(129,206,235,.30);border-radius:2px;background:none}
+.seg{
+  width:0;height:100%;overflow:hidden;white-space:nowrap;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;letter-spacing:.02em;
+  transition:width .45s cubic-bezier(.2,.7,.3,1);
+}
+.seg.e{background:var(--rain);color:var(--tinta)}
+.seg.m{background:var(--arroyo);color:var(--cloud)}
+.seg.l{background:var(--azurite);color:var(--cloud)}
+/* This replaces the whole stepped-slide engine from deck.html: when v-click
+   un-hides the row, the segments grow to their declared width. */
+.cond:not(.slidev-vclick-hidden) .seg{width:var(--w)}
+.cond:not(.slidev-vclick-hidden) .seg:nth-child(2){transition-delay:.09s}
+.cond:not(.slidev-vclick-hidden) .seg:nth-child(3){transition-delay:.18s}
+
+/* ---------------- close ---------------- */
+/* The master's closing slide is the title slide again: light field, centred,
+   the same brick rule between the two lines. */
+.close-wrap{display:flex;flex-direction:column;justify-content:center;
+  align-items:center;text-align:center;height:100%}
+.close-wrap h1,.close-wrap h2{color:var(--ink);text-align:center;max-width:24ch}
+.contact{font-size:22px;color:var(--ink);line-height:1.7;opacity:.9}
+.slidev-layout .contact a{color:var(--arroyo);text-decoration:none;border:none}
+.field-light .statement-line{color:var(--ink)}
+
+/* ---------------- shared imagery ---------------- */
+/* the title slide draws its own, and it is the dark-art lockup because that
+   slide is on the light field */
+.brandmark{width:58px;height:auto;display:block}
+
+.photo-bleed{position:absolute;inset:0;z-index:0;background:var(--az-blue);overflow:hidden}
+.photo-bleed img{width:100%;height:100%;object-fit:cover;object-position:center 42%;display:block}
+/* Bottom only. Face detection over the rendered frame puts all 19 faces above
+   y=515, so nothing above that is ever darkened or covered. */
+.photo-bleed::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,
+    rgba(3,19,46,0) 0%, rgba(3,19,46,0) 64%, rgba(3,19,46,.38) 73%,
+    rgba(3,19,46,.72) 86%, rgba(3,19,46,.93) 100%);
+}
+.quote{max-width:48ch;font-size:19px;line-height:1.45}
+
+/* Everything on the photo slides lives here, clear of every face. */
+.photo-cap{
+  position:absolute;left:var(--pad);bottom:44px;z-index:1;
+  text-shadow:0 1px 16px rgba(3,19,46,.95),0 0 4px rgba(3,19,46,.9);
+}
+/* 38px, not the deck's 44px h1. The cap's total height is what the face
+   detection in README §7 was run against; growing the type raises its top edge
+   into the bottom row of faces. Colour is the master's, metrics are not. */
+.photo-cap h1{font-size:38px;max-width:30ch;line-height:1.1;color:var(--sky)}
+.photo-cap .lead-in{
+  margin-top:22px;padding-top:20px;border-top:1px solid var(--rule);
+  font-size:26px;color:var(--sky);max-width:30ch;line-height:1.35;
+}
+
+/* Program lockup, top right. The VIP mark is navy type and a red block A on a
+   transparent ground, so it needs a light plate to read on a dark photograph.
+   Recolouring the mark itself would break the brand artwork. */
+.photo-logo{
+  position:absolute;top:var(--pad);right:var(--pad);z-index:2;
+  width:264px;height:auto;display:block;
+  background:#fff;padding:11px 15px;border-radius:4px;
+}
+.photo-cap .sub{font-size:22px;line-height:1.35;
+  max-width:36ch;margin-top:10px;color:var(--paper)}
+
+/* project dividers */
+.proj{display:flex;flex-direction:column;justify-content:center;height:100%}
+.proj .pn{font-size:22px;font-weight:700;color:var(--bloom);letter-spacing:.06em}
+.proj h1{font-size:72px;max-width:16ch;margin-top:20px}
+
+/* section-opener mark, rises out of the bottom-right corner */
+.thinker{position:absolute;right:0;bottom:0;height:300px;width:auto;z-index:2;pointer-events:none}
+
+/* ============================================================
+   TEMPORAL DATASET DECK — new patterns
+   ============================================================ */
+
+/* ---------------- slide 1: title hook ---------------- */
+.sub-hook{
+  font-size:30px;color:var(--dim);margin-top:22px;line-height:1.4;max-width:36ch;
+}
+
+/* ---------------- slide 2: era comparison ---------------- */
+.compare{display:flex;gap:0;margin-top:32px;flex:1}
+.compare-col{flex:1;padding:0 36px}
+.compare-col:first-child{padding-left:0;border-right:1px solid var(--rule)}
+.compare-col:last-child{padding-right:0}
+.compare-yr{font-family:var(--mono);font-size:52px;font-weight:700;color:var(--rain);margin-bottom:22px}
+.compare-quote{
+  font-size:20px;line-height:1.45;color:var(--paper);
+  padding:14px 0;border-bottom:1px solid var(--rule);
+  font-style:italic;
+}
+.compare-label{
+  font-size:18px;font-weight:700;color:var(--bloom);
+  letter-spacing:.06em;margin-top:18px;
+}
+.compare-foot{
+  font-size:24px;font-weight:700;color:var(--sky);
+  text-align:center;margin-top:auto;padding-top:24px;
+  border-top:1px solid var(--rule);
+}
+
+/* ---------------- slide 3: question prompt ---------------- */
+.question-prompt{
+  font-size:36px;color:var(--bloom);margin-top:28px;font-weight:700;
+}
+
+/* ---------------- slide 4: stage flow ---------------- */
+.stage-flow{margin-top:40px;display:flex;flex-direction:column;align-items:flex-start;gap:0}
+.stage-item{
+  font-size:30px;color:var(--paper);padding:16px 0;
+  border-bottom:1px solid var(--rule);width:100%;max-width:480px;
+}
+.stage-arrow{font-size:24px;color:var(--rain);padding:8px 0}
+.stage-foot{
+  font-size:20px;color:var(--dim);margin-top:auto;padding-top:20px;
+  border-top:1px solid var(--rule);
+}
+
+/* ---------------- slide 5: training flow ---------------- */
+.train-flow{margin-top:36px;display:flex;flex-direction:column;align-items:flex-start;gap:0}
+.train-stage{
+  padding:14px 24px;
+  background:rgba(30,82,136,.20);border:1px solid var(--azurite);border-radius:4px;
+  min-width:280px;
+}
+.train-label{font-size:22px;font-weight:700;color:var(--rain)}
+.train-detail{font-size:17px;color:var(--dim);margin-top:4px}
+.train-takeaway{
+  font-size:24px;font-weight:700;color:var(--sky);
+  margin-top:auto;padding-top:20px;border-top:1px solid var(--rule);
+}
+
+/* ---------------- slide 6: hypothesis ---------------- */
+.hyp-text{margin-top:20px}
+.hyp-text p{font-size:24px;line-height:1.55;color:var(--paper)}
+.hyp-text strong{color:var(--bloom);font-weight:700}
+.hyp-specs{
+  font-size:22px;font-weight:700;color:var(--rain);
+  letter-spacing:.04em;margin-top:16px;
+}
+.hyp-compare{
+  display:flex;align-items:center;gap:36px;
+  margin-top:auto;padding-top:24px;border-top:1px solid var(--rule);
+  justify-content:center;
+}
+.hyp-side{text-align:center}
+.hyp-tag{
+  font-size:22px;font-weight:700;letter-spacing:.06em;
+  padding:8px 22px;border-radius:4px;display:inline-block;
+}
+.hyp-tag.combined{background:var(--bloom);color:#fff}
+.hyp-tag.single{background:rgba(30,82,136,.40);color:var(--paper)}
+.hyp-sub{font-size:16px;color:var(--dim);margin-top:8px}
+.hyp-vs{font-size:28px;font-weight:700;color:var(--dim)}
+
+/* ---------------- slide 7: numbered questions ---------------- */
+.q-list{margin-top:36px;display:flex;flex-direction:column;gap:0}
+.q-item{
+  display:flex;align-items:baseline;gap:24px;
+  padding:22px 0;border-bottom:1px solid var(--rule);
+}
+.q-num{
+  font-family:var(--mono);font-size:44px;font-weight:700;
+  color:var(--azurite);flex-shrink:0;width:56px;text-align:right;
+}
+.q-text{font-size:28px;color:var(--paper)}
+.q-item.hero .q-num{color:var(--bloom)}
+.q-item.hero .q-text{color:var(--bloom);font-weight:700}
+
+/* ---------------- slide 8: Cecil's hero ---------------- */
+.cecil-hero{
+  display:flex;flex-direction:column;justify-content:center;
+  height:100%;
+  background:linear-gradient(135deg,var(--stage) 0%,var(--az-blue) 100%);
+  margin:calc(-1 * var(--pad));padding:var(--pad);
+}
+.cecil-text h1{font-size:54px;color:var(--sky);line-height:1.12;max-width:20ch}
+.cecil-text p{font-size:30px;color:var(--rain);margin-top:16px}
+.cecil-sub{font-size:24px !important;color:var(--dim) !important;margin-top:12px !important}
+
+/* ---------------- slide 10: specialty timelines ---------------- */
+.spec-timelines{margin-top:32px;border-top:1px solid var(--rule)}
+.spec-row{
+  display:flex;align-items:center;gap:20px;
+  padding:18px 0;border-bottom:1px solid rgba(129,206,235,.10);
+}
+.spec-name{font-size:19px;color:var(--rain);width:170px;flex-shrink:0;letter-spacing:.03em}
+.spec-book{font-size:18px;color:var(--dim);width:240px;flex-shrink:0}
+.spec-dots{display:flex;gap:48px;flex:1;justify-content:center}
+.dot{width:14px;height:14px;border-radius:50%;display:inline-block}
+.dot.e{background:var(--rain)}
+.dot.m{background:var(--arroyo)}
+.dot.l{background:var(--azurite)}
+.spec-caveat{
+  font-size:16px;color:var(--dim);margin-top:auto;
+  padding-top:16px;border-top:1px solid var(--rule);
+  font-style:italic;
+}
+
+/* ---------------- slide 11: disease blocks ---------------- */
+.spec-blocks{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.block{
+  width:32px;height:32px;border-radius:3px;
+  background:rgba(30,82,136,.30);border:1px solid var(--azurite);
+}
+.spec-foot{margin-top:auto;padding-top:20px;border-top:1px solid var(--rule)}
+.spec-foot{font-size:20px;color:var(--paper)}
+.spec-foot strong{color:var(--bloom)}
+.spec-examples{font-size:17px;color:var(--dim);margin-top:6px}
+
+/* ---------------- slide 12: pipeline ---------------- */
+.pipeline{display:flex;align-items:center;justify-content:center;gap:0;margin-top:48px}
+.pipeline-step{display:flex;align-items:center;gap:0}
+.pipe-box{
+  padding:18px 22px;
+  background:rgba(30,82,136,.20);border:1px solid var(--azurite);border-radius:4px;
+  text-align:center;min-width:140px;
+}
+.pipe-label{font-size:18px;font-weight:700;color:var(--rain);letter-spacing:.04em}
+.pipe-detail{font-size:14px;color:var(--dim);margin-top:4px}
+.pipe-arrow{font-size:24px;color:var(--rain);padding:0 14px}
+.pipeline-callout{
+  font-size:20px;color:var(--bloom);font-weight:700;
+  margin-top:auto;padding-top:20px;border-top:1px solid var(--rule);
+  text-align:center;
+}
+
+/* ---------------- slide 13: validation gates ---------------- */
+.gate-stop{font-size:42px;margin-bottom:20px}
+.gate-flow{
+  display:flex;align-items:center;justify-content:center;
+  gap:0;margin-top:24px;
+}
+.gate-box{
+  padding:22px 28px;
+  background:rgba(30,82,136,.20);border:1px solid var(--azurite);border-radius:4px;
+  text-align:center;min-width:220px;
+}
+.gate-num{font-family:var(--mono);font-size:32px;font-weight:700;color:var(--rain)}
+.gate-title{font-size:20px;font-weight:700;color:var(--paper);margin-top:8px}
+.gate-detail{font-size:15px;color:var(--dim);margin-top:6px}
+.gate-compare{font-size:16px;color:var(--rain);margin-top:8px;font-weight:700}
+.gate-arrow{font-size:28px;color:var(--rain);padding:0 20px}
+.gate-pass{
+  font-size:18px;font-weight:700;color:var(--bloom);
+  padding:18px 24px;border:2px solid var(--bloom);border-radius:4px;
+}
+.gate-takeaway{
+  font-size:22px;font-weight:700;color:var(--sky);
+  margin-top:auto;padding-top:20px;border-top:1px solid var(--rule);
+  text-align:center;
+}
+
+/* ---------------- slide 14: condition badges ---------------- */
+.cond-badges{
+  display:flex;gap:14px;margin-top:20px;justify-content:center;
+}
+.cond-models{
+  font-size:20px;color:var(--dim);text-align:center;margin-top:10px;
+  letter-spacing:.03em;
+}
+
+/* ---------------- slide 15: LoRA ---------------- */
+.lora-explain{font-size:26px;color:var(--dim);margin-top:12px}
+.lora-diagram{
+  display:flex;align-items:center;justify-content:center;
+  gap:28px;margin-top:44px;
+}
+.lora-box{
+  padding:30px 44px;border-radius:6px;text-align:center;min-width:240px;
+}
+.lora-box.frozen{
+  background:rgba(30,82,136,.20);border:2px solid var(--azurite);
+}
+.lora-box.trained{
+  background:rgba(239,64,86,.12);border:2px solid var(--bloom);
+}
+.lora-tag{font-size:22px;font-weight:700;color:var(--paper)}
+.lora-state{font-size:16px;color:var(--dim);margin-top:6px;font-style:italic}
+.lora-box.trained .lora-tag{color:var(--bloom)}
+.lora-plus{font-size:40px;font-weight:200;color:var(--dim)}
+.lora-params{
+  display:flex;flex-direction:column;align-items:center;
+  gap:6px;margin-top:36px;
+}
+.param-big{font-size:22px;color:var(--dim)}
+.param-arrow{font-size:22px;color:var(--rain)}
+.param-small{font-size:22px;font-weight:700;color:var(--rain)}
+.lora-count{
+  font-size:20px;color:var(--sky);text-align:center;
+  margin-top:auto;padding-top:20px;border-top:1px solid var(--rule);
+}
+
+/* ---------------- slide 16: predicted bars ---------------- */
+.pred-bars{margin-top:12px}
+.pred-label{
+  font-size:15px;color:var(--slate);text-align:center;
+  font-style:italic;margin-bottom:18px;opacity:.7;
+}
+.pred-chart{display:flex;flex-direction:column;gap:6px}
+.pred-row{display:flex;align-items:center;height:46px;gap:16px}
+.pred-name{width:140px;font-size:17px;color:var(--slate);text-align:right;flex-shrink:0}
+.pred-track{flex:1;height:24px}
+.pred-fill{
+  height:100%;border-radius:2px;width:0;
+  transition:width .6s cubic-bezier(.2,.7,.3,1);
+  background:var(--azurite);
+}
+.pred-fill.e{background:var(--rain)}
+.pred-fill.m{background:var(--arroyo)}
+.pred-fill.l{background:var(--azurite)}
+.pred-fill.c{background:var(--bloom)}
+.pred-row.hero .pred-name{color:var(--bloom);font-weight:700}
+
+/* ---------------- slide 16: interpretations ---------------- */
+.result-interp{
+  display:flex;flex-wrap:wrap;gap:14px 32px;
+  margin-top:auto;padding-top:18px;border-top:1px solid var(--rule);
+  justify-content:center;
+}
+.interp{font-size:15px;color:var(--slate)}
+.interp strong{color:var(--ink);font-weight:700}
+
+/* ---------------- slide 17: close ---------------- */
+.close-question{
+  font-size:32px;color:var(--dim);margin-top:24px;max-width:30ch;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .cell,.bar-fill,.seg,.pred-fill,#rail{transition:none!important}
+}

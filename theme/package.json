@@ -1,0 +1,7 @@
+{
+  "name": "slidev-theme-ua-talk",
+  "private": true,
+  "version": "0.1.0",
+  "keywords": ["slidev-theme", "slidev"],
+  "engines": { "slidev": ">=52.0.0" }
+}
