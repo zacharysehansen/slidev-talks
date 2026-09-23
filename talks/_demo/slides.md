@@ -121,6 +121,118 @@ Sample accuracy, by training condition
 The same slide, with the takeaway *held back one click*.
 
 ---
+layout: compare
+---
+
+## The same disease, the same textbook series.
+
+::left::
+
+### 1986
+
+> "swallowed material accumulates in the esophagus until the sheer weight of the contents overcomes sphincteric resistance"
+
+> "seems to swallow better when he eats at home"
+
+**Observation**
+
+::right::
+
+### 2012
+
+> "the sphincter loses its ability to relax"
+
+**Mechanism**
+
+::foot::
+
+Same disease. Same textbook series. 26 years apart.
+
+---
+layout: compare
+vs: vs.
+---
+
+## Hypothesis
+
+::left::
+
+### COMBINED
+
+Early + Middle + Late
+
+::right::
+
+### SINGLE ERA
+
+Early *or* Middle *or* Late
+
+---
+layout: steps
+hero: 4
+---
+
+## Four questions, one experiment
+
+1. Do the eras differ?
+2. Can the corpus be built?
+3. Does fine-tuning improve diagnosis?
+4. Does era explain the difference?
+
+---
+layout: grid
+---
+
+## One specialty textbook joins in each field
+
+### Nephrology
+
+Brenner and Rector
+
+### Cardiology
+
+Braunwald
+
+### Gastroenterology
+
+Bockus and Sleisenger
+
+### Pulmonology
+
+Murray and Nadel
+
+::foot::
+
+Known limitation: specialty series begin later
+
+---
+layout: grid
+field: light
+---
+
+## Four specialties. Ten diseases each.
+
+### Nephrology
+
+**10**
+
+### Cardiology
+
+**10**
+
+### Pulmonology
+
+**10**
+
+### Gastroenterology
+
+**10**
+
+::foot::
+
+Selection criterion: *prevalence*
+
+---
 layout: close
 ---
 

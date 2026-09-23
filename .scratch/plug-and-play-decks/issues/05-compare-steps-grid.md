@@ -4,7 +4,7 @@
 
 **Blocked by:** 01
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Demo slides reproduce the look of the temporal deck's era comparison, four questions and specialty grid, in markdown only
-- [ ] `check` passes on the demo
+- [x] Demo slides reproduce the look of the temporal deck's era comparison, four questions and specialty grid, in markdown only
+- [x] `check` passes on the demo
