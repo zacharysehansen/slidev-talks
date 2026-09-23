@@ -119,7 +119,7 @@ its figures are generated and it ships no binary assets.
 | `slides.original.md` | `talks/seminar-intro/slides.md` |
 | `demo.md` | rebuilt as `talks/_demo/slides.md` |
 | `data.ts` | split into `talks/seminar-intro/data/*.json` and `talks/temporal-dataset/data/*.json` |
-| `presentation-style.md` | folded into the build-deck skill, and kept as the human-readable version |
+| `presentation-style.md` | stays at the root as the one source for the style rules; the build-deck skill points at it rather than copying it |
 | `ModesPanel`, `ProtocolDiagram`, `IronsidesLegend` | `talks/seminar-intro/components/` |
 | `LoopDiagram`, `SpecificityRamp`, `PipelineDiagram`, `PredictedBars`, `EraTimeline`, `MotionChart` | `_unused/` of their talk, once their replacement layout or figure works |
 | talk images and video in `public/assets/` | the owning talk's `public/assets/` |

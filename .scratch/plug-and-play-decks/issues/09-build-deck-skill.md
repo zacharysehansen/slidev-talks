@@ -4,7 +4,7 @@
 
 **Blocked by:** 02, 04, 05, 06, 07, 08
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] The demo talk passes `check` with zero warnings
-- [ ] Converting a short sample source file with the skill produces a talk that passes `check`
+- [x] The demo talk passes `check` with zero warnings
+- [x] Converting a short sample source file with the skill produces a talk that passes `check`
