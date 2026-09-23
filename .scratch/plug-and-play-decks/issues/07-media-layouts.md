@@ -4,8 +4,8 @@
 
 **Blocked by:** 01
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Each has a demo slide in markdown only
-- [ ] The video pauses when leaving its slide; a missing asset shows the fallback rather than breaking the deck
-- [ ] `check` passes on the demo
+- [x] Each has a demo slide in markdown only
+- [x] The video pauses when leaving its slide; a missing asset shows the fallback rather than breaking the deck
+- [x] `check` passes on the demo

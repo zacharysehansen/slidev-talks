@@ -307,6 +307,43 @@ mark: 1980 DSM-III
   - Structured criteria, standardized terminology, tables.
 
 ---
+layout: plate
+field: light
+---
+
+![](/figures/sample_bars.svg)
+
+---
+layout: bleed
+video: /figures/sample_clip.mp4
+---
+
+A caption over the video
+
+---
+layout: link
+---
+
+<https://sli.dev>
+
+---
+layout: photo
+image: /figures/sample_photo.png
+---
+
+# A photograph as the whole slide
+
+The text sits wherever the frame is empty.
+
+---
+layout: photo
+image: /figures/sample_photo.png
+place: top-right
+---
+
+# Placed top right
+
+---
 layout: close
 ---
 

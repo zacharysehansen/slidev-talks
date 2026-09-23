@@ -5,3 +5,5 @@ result and none of it should appear in a real talk.
 
 - `sample_rates.csv`: five made-up accuracy values, one per condition. Drives
   `figures/sample_bars.py`.
+- `figures/sample_photo.py` and `figures/sample_clip.py` read no data. They
+  generate a stand-in photograph and video so the demo needs no binary assets.

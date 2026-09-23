@@ -7,8 +7,8 @@
  *   node deck.mjs check <talk> [--shots dir]    overflow lint, see check.mjs
  *   node deck.mjs figures <talk> [--all]        rerun stale figure scripts
  *
- * Figures: talks/<talk>/figures/foo.py writes public/figures/foo.svg (or .png)
- * through plot_styles.save_slide. A script reruns when it, theme/plot_styles.py
+ * Figures: talks/<talk>/figures/foo.py writes public/figures/foo.<ext>, usually
+ * foo.svg through plot_styles.save_slide. Any extension counts as the output. A script reruns when it, theme/plot_styles.py
  * or a data file it names is newer than its output. A script that names no
  * data file depends on all of them. dev, build and export run this first.
  *
@@ -61,7 +61,9 @@ function figures(all = false) {
     const text = fs.readFileSync(src, 'utf8')
     const named = data.filter(f => text.includes(f))
     const inputs = [src, styles, ...(named.length ? named : data).map(f => path.join(dataDir, f))]
-    const output = ['svg', 'png'].map(e => path.join(out, `${stem}.${e}`)).find(f => fs.existsSync(f))
+    const output = fs.existsSync(out)
+      ? fs.readdirSync(out).filter(f => path.parse(f).name === stem).map(f => path.join(out, f))[0]
+      : undefined
 
     if (!all && output && Math.max(...inputs.map(mtime)) <= mtime(output)) continue
     console.log(`figure  ${stem}`)

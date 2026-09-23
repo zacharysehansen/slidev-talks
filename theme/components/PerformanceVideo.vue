@@ -1,21 +1,20 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { onSlideEnter, onSlideLeave } from '@slidev/client'
 
 /*
-  Two slides use this. The defaults are the EarthScape clip, so the call site
-  that was here first still reads `<PerformanceVideo />` and behaves exactly as
-  it did.
+  A full-bleed video that plays on slide enter and pauses on leave. The bleed
+  layout draws it from `video:`; slides can also use it directly.
 
-  `fit` matters. EarthScape is 16:9 and fills the frame, so it covers. The motion
-  comparison is 1898x890, wider than the canvas, and cropping it would cut one of
-  its two panels off, so it contains and letterboxes instead.
+  `fit` matters. A 16:9 clip fills the frame, so it covers. Anything wider than
+  the canvas (two panels side by side, say) should contain and letterbox, or
+  cropping cuts a panel off. A missing file shows its path instead of a black
+  frame, so the deck still opens.
 */
-withDefaults(defineProps<{ src?: string; fit?: 'cover' | 'contain'; missing?: string }>(), {
-  src: '/assets/earthscape.mp4',
+const props = withDefaults(defineProps<{ src: string; fit?: 'cover' | 'contain'; missing?: string }>(), {
   fit: 'cover',
-  missing: 'Drop the trimmed clip at public/assets/earthscape.mp4 and reload.',
 })
+const message = computed(() => props.missing ?? `Missing video: public${props.src}`)
 
 const el = ref<HTMLVideoElement>()
 const broken = ref(false)
@@ -34,6 +33,6 @@ onSlideLeave(() => el.value?.pause())
       v-show="!broken" ref="el" muted playsinline preload="auto"
       :class="fit" :src="src" @error="broken = true"
     />
-    <div v-if="broken" class="video-miss">{{ missing }}</div>
+    <div v-if="broken" class="video-miss">{{ message }}</div>
   </div>
 </template>
