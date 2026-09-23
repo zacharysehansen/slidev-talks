@@ -4,7 +4,7 @@
 
 **Blocked by:** 01
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Each layout has a demo slide on both fields, written in markdown only
-- [ ] `check` passes on the demo
+- [x] Each layout has a demo slide on both fields, written in markdown only
+- [x] `check` passes on the demo

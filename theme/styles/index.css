@@ -95,7 +95,7 @@ html,body,#app{background:#000}
    fractions the pptx places them: the left arc across 0-46% of the width,
    the right one across 35-100%, both full height. White line art, so on the
    navy it would vanish; it only ever appears on the light field. */
-.slidev-layout.field-light{
+.slidev-layout:is(.field-light,[field=light]){
   background-color:var(--plate);
   background-image:url(/brand/arc-left.png),url(/brand/arc-right.png);
   background-size:46% 100%,65% 100%;
@@ -119,7 +119,7 @@ html,body,#app{background:#000}
   --rain:#348DBD;      /* #81D2EB is invisible on #E1E9EB */
 }
 /* the dark-art lockup, since this field is light */
-.slidev-layout.field-light::after{
+.slidev-layout:is(.field-light,[field=light])::after{
   width:62px;height:56px;
   background-image:url(/brand/ua-mark-navy.png);
 }
@@ -132,7 +132,7 @@ html,body,#app{background:#000}
   position:absolute;left:var(--pad);bottom:34px;right:280px;
   font-size:16px;line-height:1.35;color:var(--paper);opacity:.85;z-index:3;
 }
-.field-light .source{color:var(--slate);opacity:1}
+:is(.field-light,[field=light]) .source{color:var(--slate);opacity:1}
 
 /* built-in `statement` layout. The master's own statement slides ("Need:",
    "Hypothesis") are a sky heading over big white sans, left-aligned, so this
@@ -161,15 +161,15 @@ html,body,#app{background:#000}
 .slidev-layout.plate img{max-height:470px}
 /* on the light field the figure needs no rounding or scrim; on the navy it
    still does, for anything left there deliberately */
-.slidev-layout:not(.field-light).figure img,
-.slidev-layout:not(.field-light).plate img{border-radius:4px}
+.slidev-layout:not(:is(.field-light,[field=light])).figure img,
+.slidev-layout:not(:is(.field-light,[field=light])).plate img{border-radius:4px}
 /* Three of the figures are matplotlib exports with a white canvas baked in.
    The master's own charts have no such edge, so multiply drops the white into
    the plate and leaves the ink, which is what makes them sit on the slide
    instead of on top of it. Drop this rule and the white boxes come back. */
-.field-light.figure img,
-.field-light.plate img,
-.field-light .ironsides img{mix-blend-mode:multiply}
+:is(.field-light,[field=light]).figure img,
+:is(.field-light,[field=light]).plate img,
+:is(.field-light,[field=light]) .ironsides img{mix-blend-mode:multiply}
 
 /* `TextBox 5` / `TextBox 12`: the figure's own title, grey, bold, centred,
    sitting above the plot rather than inside it. 36-40pt in the pptx. */
@@ -216,7 +216,7 @@ html,body,#app{background:#000}
    is a `.source`, the element in front of it takes the margin instead. */
 .slidev-layout:not(.statement) > :is(h1,h2):first-child ~ *:last-child:not(.source),
 .slidev-layout:not(.statement) > :is(h1,h2):first-child ~ *:has(+ .source:last-child){margin-bottom:auto}
-.field-light h1,.field-light h2{color:var(--ink)}
+:is(.field-light,[field=light]) h1,:is(.field-light,[field=light]) h2{color:var(--ink)}
 .slidev-layout p{margin:0;line-height:inherit}
 
 /* `Rectangle 5` on the master's content slides: white body, red bullet. */
@@ -477,7 +477,7 @@ html,body,#app{background:#000}
 .close-wrap h1,.close-wrap h2{color:var(--ink);text-align:center;max-width:24ch}
 .contact{font-size:22px;color:var(--ink);line-height:1.7;opacity:.9}
 .slidev-layout .contact a{color:var(--arroyo);text-decoration:none;border:none}
-.field-light .statement-line{color:var(--ink)}
+:is(.field-light,[field=light]) .statement-line{color:var(--ink)}
 
 /* ---------------- shared imagery ---------------- */
 /* the title slide draws its own, and it is the dark-art lockup because that
@@ -804,3 +804,48 @@ html,body,#app{background:#000}
   text-align:center;max-width:44ch;margin:0 auto 22px;letter-spacing:-.005em;
 }
 .figure .takeaway p{display:block;margin:0}
+
+/* ---------------- markdown conventions, every layout ----------------
+   Only direct markdown children (p, headings, quotes, lists straight under the
+   layout) pick these up, so HTML blocks in older slides keep their own look. */
+.slidev-layout > :is(p,h1,h2,h3,blockquote) em,
+.slidev-layout > * > :is(p,h1,h2,h3,blockquote) em{font-style:normal;color:var(--bloom)}
+.slidev-layout > :is(p,h1,h2,h3,blockquote) strong,
+.slidev-layout > * > :is(p,h1,h2,h3,blockquote) strong{font-weight:700;color:var(--arroyo)}
+
+/* ---------------- default ---------------- */
+.slidev-layout.default > p:not([class]){font-size:32px;line-height:1.34;max-width:40ch}
+.slidev-layout.default > p:not([class]) + p:not([class]){margin-top:22px}
+
+/* ---------------- statement ---------------- */
+.slidev-layout.statement > h1 + p:not([class]){
+  font-size:30px;line-height:1.4;color:var(--dim);margin-top:28px;max-width:40ch;
+}
+:is(.field-light,[field=light]).statement h1{color:var(--ink)}
+
+/* ---------------- title / close, markdown form ---------------- */
+.title-md > h1{font-size:54px;color:var(--ink);max-width:24ch;line-height:1.14}
+.title-md > h1::after{content:"";display:block;width:64px;height:4px;background:var(--brick);margin:40px auto 34px}
+.title-md > p{font-size:26px;color:var(--ink);line-height:1.5;opacity:.9;max-width:44ch}
+.title-md > p + p{margin-top:10px}
+.slidev-layout.close::after{width:62px;height:56px;background-image:url(/brand/ua-mark-navy.png)}
+
+/* ---------------- quote ---------------- */
+.slidev-layout.quote > blockquote{
+  margin:0;padding:0 0 0 36px;border-left:4px solid var(--bloom);
+  font-size:46px;line-height:1.28;color:var(--paper);max-width:28ch;letter-spacing:-.01em;
+}
+.slidev-layout.quote > blockquote p + p{margin-top:24px}
+:is(.field-light,[field=light]).quote > blockquote{color:var(--ink)}
+
+/* ---------------- number ---------------- */
+/* Flat markdown (h1, p, h1, p) flowed into columns: numeral over caption. */
+.numbers{display:grid;grid-template-rows:auto auto;grid-auto-flow:column;
+  grid-auto-columns:minmax(0,1fr);column-gap:80px;align-items:end}
+.numbers > h1{font-size:150px;line-height:1;letter-spacing:-.03em;color:var(--sky)}
+.numbers > p{font-size:30px;line-height:1.35;color:var(--dim);margin-top:22px;align-self:start;max-width:22ch}
+:is(.field-light,[field=light]) .numbers > h1{color:var(--ink)}
+.slidev-layout.quote,.slidev-layout.number,.slidev-layout.statement{width:100%}
+
+/* inline code in markdown: mono, accent, no box, readable on both fields */
+.slidev-layout :not(pre) > code{background:none;padding:0;color:var(--arroyo);font-family:var(--mono);font-size:.9em}
