@@ -809,3 +809,18 @@ html,body,#app{background:#000}
 @media (prefers-reduced-motion:reduce){
   .cell,.bar-fill,.seg,.pred-fill,#rail{transition:none!important}
 }
+
+/* ============================================================
+   LAYOUTS — one block per layout in theme/layouts/. Talks write markdown only.
+   ============================================================ */
+
+/* ---------------- figure ---------------- */
+/* The first line of the default slot is the figure title; the image under it
+   is the plot. .fig-title and .takeaway above carry the type. */
+.slidev-layout.figure{flex-direction:column}
+.figure .fig-body{display:flex;flex-direction:column;align-items:center;width:100%}
+.figure .fig-body > p:first-child:not(:has(img)){
+  display:block;font-size:30px;font-weight:700;line-height:1.22;color:var(--slate);
+  text-align:center;max-width:44ch;margin:0 auto 22px;letter-spacing:-.005em;
+}
+.figure .takeaway p{display:block;margin:0}

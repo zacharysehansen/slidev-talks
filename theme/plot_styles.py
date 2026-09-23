@@ -11,9 +11,16 @@ Usage:
     fig, ax = plt.subplots(...)
     ps.bold_ticks(ax)
     ps.save(fig, "my_figure")
+
+Slides (this copy lives in the deck theme; everything below is additive, so the
+file still works dropped back into the paper project):
+    ps.apply("slide")             # projection sizes, transparent, text as paths
+    fig, ax = plt.subplots(figsize=ps.SLIDE_FIGSIZE)
+    ps.save_slide(fig)            # public/figures/<script name>.svg
 """
 
 import os
+import sys
 from typing import List, Optional, Tuple
 
 import numpy as np
@@ -70,6 +77,12 @@ PREVIEW_DPI = 100
 UPLOAD_DPI = 200
 PRINT_DPI = 300
 
+# Slide figures. The figure layout shows a plot about 1104x430 CSS px, and an
+# SVG's intrinsic size is 96 px per inch, so this figsize lands at 1:1 and a
+# point size here is 4/3 of that in CSS px (ticks 15pt = 20px on the slide).
+SLIDE_FIGSIZE = (11.5, 4.45)
+SLIDE_RASTER_DPI = 200
+
 
 # ── Font-size tiers ─────────────────────────────────────────────────────────
 #
@@ -100,6 +113,15 @@ _FONT_TIERS = {
         "legend.title_fontsize": 16,
         "figure.titlesize": 26,
     },
+    "slide": {
+        "axes.titlesize": 20,
+        "axes.labelsize": 18,
+        "xtick.labelsize": 15,
+        "ytick.labelsize": 15,
+        "legend.fontsize": 15,
+        "legend.title_fontsize": 16,
+        "figure.titlesize": 22,
+    },
     "compact": {
         "axes.titlesize": 20,
         "axes.labelsize": 16,
@@ -123,6 +145,28 @@ def apply(tier: str = "standard") -> None:
     _base_rcparams()
     if tier in _FONT_TIERS:
         plt.rcParams.update(_FONT_TIERS[tier])
+    if tier == "slide":
+        _slide_rcparams()
+
+
+def _slide_rcparams() -> None:
+    """Extras for figures shown on a slide rather than printed.
+
+    The slide's own title line names the plot, so figures carry no title.
+    Arial falls through to Liberation Sans, which has Arial's metrics, on a
+    machine without it. Text is saved as paths so the SVG looks the same on
+    whatever machine presents it.
+    """
+    from matplotlib import font_manager
+    installed = {f.name for f in font_manager.fontManager.ttflist}
+    family = [f for f in ("Arial", "Liberation Sans") if f in installed] or ["DejaVu Sans"]
+    plt.rcParams.update({
+        "font.family": family,
+        "figure.facecolor": "none",
+        "axes.facecolor": "none",
+        "savefig.transparent": True,
+        "svg.fonttype": "path",
+    })
 
 
 def _base_rcparams() -> None:
@@ -490,3 +534,35 @@ def save(
     path = os.path.join(directory, filename)
     figure.savefig(path, dpi=dpi, bbox_inches="tight")
     return path
+
+
+def save_slide(
+    figure: Figure,
+    name: Optional[str] = None,
+    raster: bool = False,
+    directory: Optional[str] = None,
+) -> str:
+    """Save a figure for a slide.
+
+    Args:
+        name: Base filename. Defaults to the running script's name, which is
+            what the deck's figure runner expects (figures/foo.py -> foo.svg).
+        raster: PNG at SLIDE_RASTER_DPI instead of SVG. For dense images such
+            as heatmaps, where thousands of vector cells would be slow.
+        directory: Defaults to $DECK_FIGURES, set by the runner, else
+            public/figures.
+
+    Returns:
+        The path the figure was saved to.
+    """
+    if name is None:
+        name = os.path.splitext(os.path.basename(sys.argv[0]))[0]
+    if directory is None:
+        directory = os.environ.get("DECK_FIGURES", os.path.join("public", "figures"))
+    return save(
+        figure,
+        name,
+        directory=directory,
+        dpi=SLIDE_RASTER_DPI,
+        extension="png" if raster else "svg",
+    )

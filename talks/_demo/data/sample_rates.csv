@@ -1,0 +1,6 @@
+condition,accuracy
+Baseline,42
+Early,56
+Middle,60
+Late,64
+Combined,78

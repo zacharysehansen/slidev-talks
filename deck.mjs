@@ -5,6 +5,12 @@
  *   node deck.mjs build <talk>                  static site into dist/<talk>/
  *   node deck.mjs export <talk>                 talks/<talk>/deck.pdf, one page per click state
  *   node deck.mjs check <talk> [--shots dir]    overflow lint, see check.mjs
+ *   node deck.mjs figures <talk> [--all]        rerun stale figure scripts
+ *
+ * Figures: talks/<talk>/figures/foo.py writes public/figures/foo.svg (or .png)
+ * through plot_styles.save_slide. A script reruns when it, theme/plot_styles.py
+ * or a data file it names is newer than its output. A script that names no
+ * data file depends on all of them. dev, build and export run this first.
  *
  * npm scripts wrap these, so `npm run dev temporal-dataset` works.
  */
@@ -16,7 +22,7 @@ const [cmd, talk, ...rest] = process.argv.slice(2)
 const talks = fs.readdirSync('talks').filter(d => fs.existsSync(path.join('talks', d, 'slides.md')))
 
 if (!cmd || !talk) {
-  console.error(`usage: node deck.mjs <dev|build|export|check> <talk>\ntalks: ${talks.join(', ')}`)
+  console.error(`usage: node deck.mjs <dev|build|export|check|figures> <talk>\ntalks: ${talks.join(', ')}`)
   process.exit(2)
 }
 if (!talks.includes(talk)) {
@@ -24,15 +30,60 @@ if (!talks.includes(talk)) {
   process.exit(2)
 }
 
-const entry = path.join('talks', talk, 'slides.md')
+const root = path.join('talks', talk)
+const entry = path.join(root, 'slides.md')
 const run = (bin, args) => process.exit(spawnSync(bin, args, { stdio: 'inherit' }).status ?? 1)
 
+const mtime = f => fs.statSync(f).mtimeMs
+const python = process.env.PYTHON || (fs.existsSync('.venv/bin/python') ? '.venv/bin/python' : 'python3')
+
+function figures(all = false) {
+  const dir = path.join(root, 'figures')
+  if (!fs.existsSync(dir)) return
+  const out = path.join(root, 'public', 'figures')
+  const dataDir = path.join(root, 'data')
+  const data = fs.existsSync(dataDir) ? fs.readdirSync(dataDir).filter(f => f !== 'README.md') : []
+  const styles = path.resolve('theme', 'plot_styles.py')
+
+  for (const script of fs.readdirSync(dir).filter(f => f.endsWith('.py')).sort()) {
+    const src = path.join(dir, script)
+    const stem = script.slice(0, -3)
+    const text = fs.readFileSync(src, 'utf8')
+    const named = data.filter(f => text.includes(f))
+    const inputs = [src, styles, ...(named.length ? named : data).map(f => path.join(dataDir, f))]
+    const output = ['svg', 'png'].map(e => path.join(out, `${stem}.${e}`)).find(f => fs.existsSync(f))
+
+    if (!all && output && Math.max(...inputs.map(mtime)) <= mtime(output)) continue
+    console.log(`figure  ${stem}`)
+    const r = spawnSync(python, [path.join('figures', script)], {
+      cwd: root,
+      stdio: 'inherit',
+      env: {
+        ...process.env,
+        PYTHONPATH: [path.resolve('theme'), process.env.PYTHONPATH].filter(Boolean).join(path.delimiter),
+        DECK_FIGURES: path.resolve(out),
+        MPLBACKEND: 'Agg',
+      },
+    })
+    if (r.status !== 0) {
+      console.error(`figure script failed: ${src}`)
+      process.exit(1)
+    }
+  }
+}
+
 switch (cmd) {
+  case 'figures':
+    figures(rest.includes('--all'))
+    process.exit(0)
   case 'dev':
+    figures()
     run('npx', ['slidev', entry, '--open', ...rest])
   case 'build':
+    figures()
     run('npx', ['slidev', 'build', entry, '--base', './', '--out', path.resolve('dist', talk), ...rest])
   case 'export':
+    figures()
     run('npx', ['slidev', 'export', entry, '--with-clicks', '--output', path.join('talks', talk, 'deck.pdf'), ...rest])
   case 'check':
     run('node', ['check.mjs', entry, ...rest])

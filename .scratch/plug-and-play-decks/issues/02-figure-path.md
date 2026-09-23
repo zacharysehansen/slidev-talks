@@ -4,10 +4,10 @@
 
 **Blocked by:** 01
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] The demo talk has a figure slide built from a data file and a script using `apply("slide")`, with no white box on the light field
-- [ ] Editing the data file and restarting dev regenerates only that figure; untouched figures are not rebuilt
-- [ ] `takeaway: click` holds the takeaway back one click
-- [ ] The `standard`, `compact` and `poster` tiers produce identical output before and after the copy (verified by rendering a sample figure with both versions)
-- [ ] `requirements.txt` pins matplotlib and numpy
+- [x] The demo talk has a figure slide built from a data file and a script using `apply("slide")`, with no white box on the light field
+- [x] Editing the data file and restarting dev regenerates only that figure; untouched figures are not rebuilt
+- [x] `takeaway: click` holds the takeaway back one click
+- [x] The `standard`, `compact` and `poster` tiers produce identical output before and after the copy (verified by rendering a sample figure with both versions)
+- [x] `requirements.txt` pins matplotlib and numpy
