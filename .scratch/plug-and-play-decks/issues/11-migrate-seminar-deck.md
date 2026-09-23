@@ -4,7 +4,7 @@
 
 **Blocked by:** 03, 09
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] `check` passes; the only warnings are the three talk components
-- [ ] Side-by-side screenshots show no slide got worse
+- [x] `check` passes; the only warnings are the three talk components
+- [x] Side-by-side screenshots show no slide got worse
