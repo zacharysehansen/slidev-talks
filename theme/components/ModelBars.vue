@@ -2,6 +2,7 @@
 
        <ModelBars />               reads data/models.json in the talk
        <ModelBars data="other" />  reads data/other.json
+       <ModelBars :values="false" />  hides the numbers, for an illustrative shape
 
      Each row is { name, v, peak? }. `peak` draws that bar in the highlight
      colour. Values are percentages. Print mode renders the bars grown.
@@ -10,7 +11,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { onSlideEnter, onSlideLeave, useNav } from '@slidev/client'
 
-const props = withDefaults(defineProps<{ data?: string }>(), { data: 'models' })
+const props = withDefaults(defineProps<{ data?: string, values?: boolean }>(), { data: 'models', values: true })
 const files = import.meta.glob<{ name: string, v: number, peak?: boolean }[]>('/data/*.json', { eager: true, import: 'default' })
 const rows = computed(() => {
   const list = files[`/data/${props.data}.json`] ?? []
@@ -38,7 +39,7 @@ onMounted(() => {
           :style="{ width: grown ? m.w : '0', transitionDelay: `${0.06 + n * 0.055}s` }"
         />
       </div>
-      <div class="mbar-val">{{ m.v.toFixed(1) }}%</div>
+      <div v-if="values" class="mbar-val">{{ m.v.toFixed(1) }}%</div>
     </div>
   </div>
 </template>

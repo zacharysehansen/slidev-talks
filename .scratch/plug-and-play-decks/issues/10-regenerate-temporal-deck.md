@@ -4,8 +4,8 @@
 
 **Blocked by:** 09
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] The generated slides contain no raw HTML
-- [ ] `check` passes
-- [ ] Side-by-side screenshots against the old version show no slide got worse
+- [x] The generated slides contain no raw HTML
+- [x] `check` passes
+- [x] Side-by-side screenshots against the old version show no slide got worse

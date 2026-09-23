@@ -8,7 +8,7 @@
 
      Each item starts with its year. `mark: 1980 DSM-III` draws a dashed
      marker at that year, placed in proportion between its neighbours, and
-     brings it in on one click. -->
+     brings it in on one click. `::foot::` adds a line under the timeline. -->
 <script setup lang="ts">
 import { computed, useSlots } from 'vue'
 import type { VNode } from 'vue'
@@ -67,5 +67,6 @@ const marker = computed(() => {
       </div>
       <div v-if="marker" v-click class="dsm" :style="{ left: marker.left }"><span>{{ marker.label }}</span></div>
     </div>
+    <div v-if="$slots.foot" class="lay-foot"><slot name="foot" /></div>
   </div>
 </template>
