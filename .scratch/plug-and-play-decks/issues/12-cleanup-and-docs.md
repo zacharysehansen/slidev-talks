@@ -4,8 +4,8 @@
 
 **Blocked by:** 10, 11
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] The theme stylesheet has no rule named after a single slide
-- [ ] Both talks and the demo still pass `check`
-- [ ] The README explains how to start a new talk in under a page
+- [x] The theme stylesheet has no rule named after a single slide
+- [x] Both talks and the demo still pass `check`
+- [x] The README explains how to start a new talk in under a page

@@ -82,6 +82,7 @@ with plain markdown.
 | a plot of data | `figure` |
 | one image / one video / one link, alone | `plate` / `bleed` / `link` |
 | a photograph as the whole slide | `photo` |
+| an image beside a few short entries (a bio, a portrait) | `side` |
 | a named section opener | `divider` |
 | a quotation | `quote` |
 

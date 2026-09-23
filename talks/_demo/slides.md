@@ -348,6 +348,21 @@ place: top-right
 # Placed top right
 
 ---
+layout: side
+image: /figures/sample_photo.png
+---
+
+### 2021 – 2025
+
+A line beside the image
+
+A smaller line of detail under it.
+
+### 2025 –
+
+The next entry
+
+---
 layout: close
 ---
 
