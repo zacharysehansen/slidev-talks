@@ -289,7 +289,7 @@ file. It contains:
 
 **Warns on:**
 - raw HTML or inline `style=` in `slides.md`, and use of a talk-level component
-- more than about 12 words of on-screen text outside a quote
+- more than 50 words of on-screen text (quotes and a figure's title line excluded) with nothing bold or accent-coloured, or with the emphasis covering half the text or more
 - a bullet list on screen
 - a `figure` slide with no takeaway line
 - more than 3 animated moments in a talk

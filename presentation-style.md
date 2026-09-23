@@ -18,6 +18,9 @@ ahead instead of listening.
 - On-screen text is a handful of words, usually under ten. A short line, not a
   sentence that hedges.
 - Never a slide of prose. If something needs a paragraph, it is spoken.
+- A slide may run past 50 words when it has to, but then something in it must
+  stand out: a bold or accent-coloured phrase, less than half the text, that
+  the eye lands on first.
 - Quotations are the exception and get a slide to themselves, unattributed on
   screen.
 
