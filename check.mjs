@@ -9,11 +9,16 @@
  *   node check.mjs talks/<talk>/slides.md               # lint one talk
  *   node check.mjs talks/<talk>/slides.md --shots out/  # also write a PNG per slide
  *
+ *   node check.mjs talks/<talk>/slides.md --static      # static lint only, no browser
+ *
  * Usually run as `npm run check <talk>`, which passes the entry for you.
+ * The static lint (lib/lint.mjs) runs first: missing assets and stale figures
+ * fail, style-rule breaks warn. Then every slide is rendered and measured.
  */
 import { spawn } from 'node:child_process'
 import fs from 'node:fs'
 import { chromium } from 'playwright-chromium'
+import { lint, report } from './lib/lint.mjs'
 
 const PORT = 3199
 const TOL = 1                 // px of slack; sub-pixel rounding is not an error
@@ -23,6 +28,14 @@ if (SHOTS) fs.mkdirSync(SHOTS, { recursive: true })
 
 // any bare `*.md` argument is the entry; without one Slidev picks up slides.md
 const ENTRY = process.argv.slice(2).find((a, i, all) => a.endsWith('.md') && all[i - 1] !== '--shots')
+
+const statics = lint(ENTRY ?? 'slides.md')
+report(statics)
+if (statics.fails.length || statics.warns.length) console.log('')
+if (process.argv.includes('--static')) {
+  console.log(`${statics.slides} slides, ${statics.fails.length} failure(s), ${statics.warns.length} warning(s).`)
+  process.exit(statics.fails.length ? 1 : 0)
+}
 
 const server = spawn('npx', ['slidev', ...(ENTRY ? [ENTRY] : []), '--port', String(PORT)], { stdio: 'ignore' })
 const stop = () => { try { server.kill() } catch {} }
@@ -110,10 +123,12 @@ for (let n = 1; n <= total; n++) {
 await browser.close()
 stop()
 
+const tally = `${statics.fails.length} static failure(s), ${statics.warns.length} warning(s)`
 if (!problems.length) {
-  console.log(`\n${total} slides, no overflow.`)
-  process.exit(0)
+  console.log(`\n${total} slides, no overflow. ${tally}.`)
+  process.exit(statics.fails.length ? 1 : 0)
 }
+console.log(`\n${tally}.`)
 console.log(`\n${problems.length} problem(s):`)
 for (const p of problems) {
   console.log(`  slide ${p.n}${p.clicks ? ' (built up)' : ''}: ${p.error ?? ''}`)

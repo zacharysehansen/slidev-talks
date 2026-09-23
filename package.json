@@ -6,7 +6,9 @@
     "dev": "node deck.mjs dev",
     "build": "node deck.mjs build",
     "export": "node deck.mjs export",
-    "check": "node deck.mjs check"
+    "check": "node deck.mjs check",
+    "figures": "node deck.mjs figures",
+    "test": "node lib/lint.test.mjs"
   },
   "devDependencies": {
     "@slidev/cli": "^52.19.1",

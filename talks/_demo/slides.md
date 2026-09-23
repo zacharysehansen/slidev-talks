@@ -4,7 +4,11 @@
 #
 #   npm run dev _demo
 #   npm run check _demo
+#
+# `allow` silences two lint rules for the whole demo, on purpose: it reproduces
+# real slides that run long, and it shows every animated feature at once.
 theme: ../../theme
+allow: [words, motion]
 title: Layout demo
 layout: title
 foot: Theme test deck

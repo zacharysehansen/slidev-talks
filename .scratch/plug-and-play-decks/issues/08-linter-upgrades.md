@@ -4,8 +4,8 @@
 
 **Blocked by:** 02
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] A deliberately broken demo copy triggers each failure and each warning once
-- [ ] Output names the slide number and the rule for each hit
-- [ ] Exit code is non-zero only on failures
+- [x] A deliberately broken demo copy triggers each failure and each warning once
+- [x] Output names the slide number and the rule for each hit
+- [x] Exit code is non-zero only on failures
