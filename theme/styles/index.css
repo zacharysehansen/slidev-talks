@@ -913,3 +913,47 @@ html,body,#app{background:#000}
 :is(.field-light,[field=light]) .lay-grid > p > strong:only-child{color:var(--ink)}
 /* beats the heading rule's margin-top:auto on whatever follows a first h2 */
 .slidev-layout.compare-layout > h2:first-child + .cmp{margin-top:40px}
+
+/* ---------------- flow ---------------- */
+.flow-layout > h1{font-size:44px;margin-bottom:12px}
+.flow-layout > :is(ul,ol){list-style:none;padding:0;margin:40px 0 0;display:flex;counter-reset:flow}
+.flow-layout.down > :is(ul,ol){flex-direction:column;align-items:flex-start;gap:44px}
+.flow-layout.across > :is(ul,ol){flex-direction:row;align-items:center;justify-content:center;gap:52px}
+.flow-layout > :is(ul,ol) > li{
+  position:relative;margin:0;counter-increment:flow;
+  display:flex;flex-direction:column;
+  padding:14px 26px;min-width:240px;
+  background:rgba(30,82,136,.20);border:1px solid var(--azurite);border-radius:4px;
+  font-size:24px;line-height:1.25;font-weight:700;color:var(--rain);
+}
+.flow-layout.across > :is(ul,ol) > li{min-width:0;text-align:center;align-items:center;font-size:20px;padding:18px 22px}
+.flow-layout > :is(ul,ol) > li::marker{content:none}
+.flow-layout > :is(ul,ol) > li + li::before{position:absolute;color:var(--rain);font-weight:400}
+.flow-layout.down > :is(ul,ol) > li + li::before{content:"\2193";top:-40px;left:26px;font-size:26px}
+.flow-layout.across > :is(ul,ol) > li + li::before{content:"\2192";left:-40px;top:50%;transform:translateY(-50%);font-size:28px}
+.flow-layout > ol > li::after{content:counter(flow);order:-1;font-family:var(--mono);font-size:30px;color:var(--rain);margin-bottom:6px}
+.flow-layout > :is(ul,ol) > li > :is(ul,ol){list-style:none;padding:0;margin:4px 0 0}
+.flow-layout > :is(ul,ol) > li > :is(ul,ol) > li{font-size:17px;font-weight:400;color:var(--dim);margin:2px 0 0;line-height:1.35}
+.flow-layout > :is(ul,ol) > li > :is(ul,ol) > li::marker{content:none}
+.flow-layout > :is(ul,ol) > li:has(> strong:only-child){background:none;border:2px solid var(--bloom)}
+.flow-layout > :is(ul,ol) > li > strong:only-child{color:var(--bloom);font-weight:700}
+:is(.field-light,[field=light]).flow-layout > :is(ul,ol) > li{background:rgba(12,34,74,.06);border-color:var(--arroyo);color:var(--ink)}
+
+/* ---------------- timeline ---------------- */
+/* The markdown list is read by the layout and drawn as .tl; the list itself is hidden. */
+.timeline-layout > :is(ul,ol){display:none}
+.timeline-layout .tl{margin-top:64px;min-height:220px}
+.timeline-layout .tl{position:relative;padding-top:44px}
+.timeline-layout .tl-line{position:absolute;left:0;right:0;top:0;height:1px;background:var(--rule)}
+.timeline-layout .tl-marks{display:flex;position:absolute;inset:0}
+.timeline-layout .era{flex:1;position:relative;padding:44px 28px 0 0}
+.timeline-layout .era .tick{position:absolute;top:0;left:0;width:1px;height:18px;background:var(--rain)}
+.timeline-layout .era .yr{font-family:var(--mono);font-size:22px;color:var(--rain)}
+.timeline-layout .era .nm{font-size:30px;margin-top:10px}
+.timeline-layout .era .dt{font-size:19px;color:var(--dim);margin-top:10px;line-height:1.45;max-width:24ch}
+.timeline-layout .dsm{position:absolute;top:0;height:100%;border-left:1px dashed var(--bloom);padding-left:12px}
+.timeline-layout .dsm span{font-size:18px;color:var(--bloom);line-height:1.4;display:block;max-width:15ch;margin-top:44px}
+:is(.field-light,[field=light]).timeline-layout .era .yr{color:var(--arroyo)}
+/* the marker's label sits above the axis, clear of the year labels */
+.timeline-layout .dsm{top:-40px;height:calc(100% + 40px)}
+.timeline-layout .dsm span{margin-top:0;max-width:none;white-space:nowrap}

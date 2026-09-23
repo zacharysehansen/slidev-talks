@@ -4,8 +4,8 @@
 
 **Blocked by:** 01
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Demo slides reproduce the stage flow, pipeline, validation gates, LoRA and Cecil's editions slides in markdown only
-- [ ] The timeline mark animates in dev and is present in PDF export
-- [ ] `check` passes on the demo
+- [x] Demo slides reproduce the stage flow, pipeline, validation gates, LoRA and Cecil's editions slides in markdown only
+- [x] The timeline mark animates in dev and is present in PDF export
+- [x] `check` passes on the demo

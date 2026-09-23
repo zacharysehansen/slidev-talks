@@ -233,6 +233,80 @@ field: light
 Selection criterion: *prevalence*
 
 ---
+layout: flow
+---
+
+## Observation gave way to criteria.
+
+- Descriptive prose
+- Standardized terminology
+- Explicit diagnostic criteria
+
+---
+layout: flow
+---
+
+## A model learns from whatever corpus it is given.
+
+- Pretraining
+  - General text
+- Fine-tuning
+  - Chosen corpus
+- **Learned content + style**
+
+::foot::
+
+This study changes only the corpus.
+
+---
+layout: flow
+direction: across
+---
+
+## From scanned pages to training data
+
+- SCAN
+  - Digitize pages
+- LOCATE
+  - Find disease sections
+- EXTRACT
+  - Pull passages
+- LABEL
+  - Era + specialty tags
+- **TRAINING FILE**
+
+::foot::
+
+Hardest step: identifying sections in older editions
+
+---
+layout: flow
+direction: across
+---
+
+# If the eras read alike, the study stops here.
+
+1. Era difference
+   - Readability + BERTScore
+2. Source difference
+   - Within the same era
+3. **Proceed to fine-tuning**
+
+---
+layout: timeline
+mark: 1980 DSM-III
+---
+
+## Cecil's editions
+
+- 1963 Early
+  - Observational prose. The physician describes what they saw.
+- 1983 Middle
+  - The transition. Criteria start displacing description.
+- 2012 Late
+  - Structured criteria, standardized terminology, tables.
+
+---
 layout: close
 ---
 

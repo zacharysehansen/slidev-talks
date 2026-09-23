@@ -155,10 +155,10 @@ Every layout is filled by plain markdown. No HTML is needed for any of them.
 | `statement` | `#` + optional line | questions, thread statements, thesis question |
 | `default` | `##` + a short line or paragraph | hypothesis, plain statements with a heading |
 | `compare` | two columns split by `::right::`. `###` = column head, `>` = quote, a trailing line after `::foot::` spans both | era comparison, combined vs single era |
-| `flow` | a list, one item per step. `direction: down \| across` in frontmatter. A final item starting with `=` is the outcome | stage flow, training flow, pipeline, validation gates, LoRA |
+| `flow` | a list, one item per step, a nested item as its detail line. `direction: down \| across` in frontmatter. A bold-only item (`- **Proceed**`) is the outcome. A numbered list prints the numbers | stage flow, training flow, pipeline, validation gates, LoRA |
 | `steps` | a numbered list. `hero: 4` highlights one item | four questions |
 | `grid` | `###` column heads, each followed by a short list or a count | specialty grid, specialty timelines |
-| `timeline` | a list of `year: label`. `mark: 1980 DSM-III` draws in last | Cecil's editions |
+| `timeline` | a list of `year label` items, a nested item as the detail. `mark: 1980 DSM-III` draws in on one click, placed in proportion to the years | Cecil's editions |
 | `number` | one or two big numerals, each with a caption line | dissociation-style slides |
 | `figure` | a title line, an image, a takeaway line. Light field automatically. `takeaway: click` holds the takeaway back one click | every plot |
 | `plate` | one image, nothing else | logged exchanges, image-only slides |
