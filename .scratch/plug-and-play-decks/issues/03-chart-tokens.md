@@ -4,8 +4,8 @@
 
 **Blocked by:** 02
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Changing a colour in `plot_styles.py` changes it in both matplotlib figures and the Vue charts after one rebuild
-- [ ] Reverb and ModelBars animate in dev and render finished in PDF export
-- [ ] No hex colour literal remains inside either component
+- [x] Changing a colour in `plot_styles.py` changes it in both matplotlib figures and the Vue charts after one rebuild
+- [x] Reverb and ModelBars animate in dev and render finished in PDF export
+- [x] No hex colour literal remains inside either component

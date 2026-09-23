@@ -37,7 +37,17 @@ const run = (bin, args) => process.exit(spawnSync(bin, args, { stdio: 'inherit' 
 const mtime = f => fs.statSync(f).mtimeMs
 const python = process.env.PYTHON || (fs.existsSync('.venv/bin/python') ? '.venv/bin/python' : 'python3')
 
+// plot_styles.py is the source for chart colour and type; the Vue charts read
+// the CSS copy of it, regenerated here when the Python is newer.
+function tokens() {
+  const css = path.join('theme', 'styles', 'plot-tokens.css')
+  if (fs.existsSync(css) && mtime(path.join('theme', 'plot_styles.py')) <= mtime(css)) return
+  const r = spawnSync(python, ['export_tokens.py'], { cwd: 'theme', stdio: 'inherit', env: { ...process.env, MPLBACKEND: 'Agg' } })
+  if (r.status !== 0) process.exit(1)
+}
+
 function figures(all = false) {
+  tokens()
   const dir = path.join(root, 'figures')
   if (!fs.existsSync(dir)) return
   const out = path.join(root, 'public', 'figures')

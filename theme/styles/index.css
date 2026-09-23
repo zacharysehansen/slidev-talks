@@ -1,3 +1,5 @@
+@import "./plot-tokens.css";
+
 /* ============================================================
    TOKENS — ported from the BMES master
    `Hansen.BMES.AI Med Misinfo.FINAL.pptx`, ppt/slideMasters/slideMaster1.xml.
@@ -309,28 +311,6 @@ html,body,#app{background:#000}
 .loop-nl{fill:var(--dim);font-family:var(--sans);font-size:16px;text-anchor:middle}
 .loop-n-vals{display:flex;justify-content:center;align-items:center;gap:80px;flex:1}
 .loop-n-vals span{font-family:var(--mono);font-size:36px;color:var(--rain);font-weight:400}
-
-/* ---------------- reverberation ---------------- */
-.strip-frame{margin-top:36px}
-.strip-row + .strip-row{margin-top:20px}
-.strip-label{font-size:17px;color:var(--dim);margin-bottom:9px;line-height:1.2}
-.strip{display:grid;grid-template-columns:repeat(50,1fr);gap:3px;height:54px}
-.cell{background:rgba(129,206,235,.10);border-radius:1px;transition:background .12s linear}
-.cell.rej{background:var(--azurite)}
-.cell.aff{background:var(--boug)}
-.strip-axis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--faint);margin-top:10px}
-.legend{display:flex;gap:30px;margin-top:24px;font-size:16px;color:var(--dim)}
-.legend i{display:inline-block;width:13px;height:13px;border-radius:2px;margin-right:9px;vertical-align:-1px}
-
-/* ---------------- model spread ---------------- */
-.bars{margin-top:40px}
-.bar-row{display:flex;align-items:center;height:46px;gap:16px}
-.bar-name{width:180px;font-size:17px;color:var(--dim);text-align:right;flex-shrink:0}
-.bar-track{flex:1;height:20px}
-.bar-fill{height:100%;background:var(--azurite);border-radius:1px;width:0;transition:width .5s cubic-bezier(.2,.7,.3,1)}
-.bar-row.peak .bar-fill{background:var(--boug)}
-.bar-val{width:64px;font-size:17px;font-family:var(--mono);flex-shrink:0}
-.bar-row.peak .bar-val{color:var(--boug)}
 
 /* ---------------- dissociation ---------------- */
 .split{display:flex;margin-top:48px}
